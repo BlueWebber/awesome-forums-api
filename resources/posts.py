@@ -10,7 +10,9 @@ class Posts(Resource):
     def get(sort_column="newest", page_number=0):
         pages_num = config.NUMBER_OF_POST_PAGES
         number_of_pages = ceil(db.get_number_of_posts()["count"] / pages_num)
-        if sort_column not in {"newest", "most_replies"}:
+        if sort_column not in config.ALLOWED_POST_SORT_CLAUSES:
             return abort(404, "Invalid sorting clause")
-        return {"posts": db.get_paginated_posts(page_number, pages_num, sort_column),
-                "number_of_pages": number_of_pages}
+        posts = db.get_paginated_posts(page_number, pages_num, sort_column)
+        if not posts:
+            return {"posts": [], "number_of_pages": number_of_pages, "message": "this page doesn't exist"}, 404
+        return {"posts": posts, "number_of_pages": number_of_pages}

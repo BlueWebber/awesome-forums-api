@@ -80,3 +80,31 @@ def edit_post_reply(reply_id, body):
 
 def delete_post_reply(reply_id):
     cursor.callproc('delete_post_reply', (reply_id,))
+
+
+@fetch_result(cursor.fetchall, cursor.nextset)
+def create_post_reaction(reaction_id, post_id, creator_id):
+    cursor.callproc('create_post_reaction', (reaction_id, post_id, creator_id))
+
+
+@fetch_result(cursor.fetchall, cursor.nextset)
+def create_reply_reaction(reaction_id, reply_id, creator_id):
+    cursor.callproc('create_reply_reaction', (reaction_id, reply_id, creator_id))
+
+
+def delete_reply_reaction(reaction_id):
+    cursor.callproc('delete_reply_reaction', (reaction_id,))
+
+
+def delete_post_reaction(reaction_id):
+    cursor.callproc('delete_post_reactions', (reaction_id,))
+
+
+@fetch_result(cursor.fetchall, cursor.nextset)
+def get_reply_reactions(reply_id):
+    cursor.callproc('get_reply_reactions', (reply_id,))
+
+
+@fetch_result(cursor.fetchall, cursor.nextset)
+def get_post_reactions(post_id):
+    cursor.callproc('get_post_reactions', (post_id,))

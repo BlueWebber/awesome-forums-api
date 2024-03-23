@@ -39,6 +39,7 @@ class Config:
     }
     MAX_IMAGE_SIZE = 10485760
     MAX_VID_SIZE = 26214400
+    ALLOWED_POST_SORT_CLAUSES = {"newest", "most_replies", "oldest"}
 
 
 config = Config()
