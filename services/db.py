@@ -3,6 +3,8 @@ from extensions import extension_db
 from MySQLdb.cursors import DictCursor
 from itertools import groupby
 
+cursor = extension_db.cursor(cursorclass=DictCursor)
+
 
 def group_reactions(reactions):
     return {key: list(value) for key, value in groupby(reactions, lambda x: x["reaction_name"])}
