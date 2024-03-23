@@ -31,7 +31,7 @@ class Post(Resource):
         user = decode_token_from_header()
         if (user['user_id'] != post['author_id'] or data["is_pinned"]) and user['permission_level'] < perm.mod:
             return abort(403)
-        post.update(data)
+        post.update({key: value for key, value in data.items() if value is not None})
         db.edit_post(**post)
         return post
 

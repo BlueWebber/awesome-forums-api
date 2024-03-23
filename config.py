@@ -17,7 +17,7 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     NUMBER_OF_POST_PAGES = 20
     ALLOWED_ORIGINS = '*'
-    ALLOWED_METHODS = "GET, POST, OPTIONS, PUT, DELETE"
+    ALLOWED_METHODS = "GET, POST, OPTIONS, PUT, DELETE, PATCH"
     ALLOWED_HEADERS = "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With, x-auth-token"
     EXPOSED_HEADERS = "x-auth-token"
     EXPIRY_TIME_MINS = 0
