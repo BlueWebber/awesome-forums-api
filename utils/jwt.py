@@ -12,7 +12,8 @@ def encode_auth_token(user_data):
         'user_id': str(user_data['user_id']),
         'username': user_data['username'],
         'email': user_data['email'],
-        'permission_level': user_data['permission_level']
+        'permission_level': user_data['permission_level'],
+        'pfp_link': user_data['pfp_link']
     }
     return jwt.encode(
         payload,

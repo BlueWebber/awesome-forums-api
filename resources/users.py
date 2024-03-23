@@ -8,6 +8,7 @@ from utils.getters import decode_token_from_header
 from utils.validators import validate_and_upload_pfp
 from services.auth import authorization_level
 from permissions import permissions_map as perm
+from utils.jwt import encode_auth_token
 from config import config
 import json
 
@@ -39,6 +40,7 @@ class Users(Resource):
             if not pfp_link:
                 return abort(400, "Invalid pfp (pfp_base64)")
         result = db.create_user(data['username'], data['email'], password, pfp_link)
+        result['token'] = encode_auth_token(result)
         del result['password']
         return result, 201
 
