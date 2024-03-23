@@ -48,8 +48,8 @@ class ByteImage(_MediaBase):
         else:
             out = BytesIO()
             new_img = Img.open(self.bytes)
-            new_img.resize(new_size)
-            new_img.save(out)
+            new_img = new_img.resize(new_size)
+            new_img.save(out, format=self.extension)
             out.seek(0)
             self.bytes = out
         if not new_img:

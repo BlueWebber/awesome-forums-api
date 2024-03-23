@@ -31,7 +31,7 @@ class Config:
     IMAGE_FORMAT = 'JPEG'
     PFP_IMAGE_FORMAT = 'PNG'
     ANIMATED_IMAGE_FORMAT = 'GIF'
-    ALLOWED_IMAGE_FORMATS = {"png", "jpeg", "jpg", "gif", "bmp", "dib", "eps", "ico", "im", "ics", "msp", "pcx"}
+    ALLOWED_IMAGE_FORMATS = {"png", "jpeg", "jpg", "gif"}
     ALLOWED_VIDEO_FORMATS = {"mp4", "webm"}
     ALLOWED_USER_SETTINGS = {"theme"}
     PFP_SIZE = (128, 128)

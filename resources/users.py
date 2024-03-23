@@ -30,7 +30,7 @@ class Users(Resource):
         return user
 
     @staticmethod
-    def post():
+    def post(user_id=None):
         data = register_parser.parse_args()
         if db.get_user_by_email(data['email']):
             return abort(409, 'E-mail is already in use')
@@ -50,7 +50,7 @@ class Users(Resource):
 
     @staticmethod
     @authorization_level(perm.normal)
-    def patch():
+    def patch(user_id=None):
         data = patch_user_parser.parse_args()
 
         if data['email'] and db.get_user_by_email(data['email']):
