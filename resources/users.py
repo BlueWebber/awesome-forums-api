@@ -52,6 +52,7 @@ class Users(Resource):
     @authorization_level(perm.normal)
     def patch(user_id=None):
         data = patch_user_parser.parse_args()
+        with_refresh_token = False
 
         if data['email'] and db.get_user_by_email(data['email']):
             return abort(409, 'E-mail is already in use')
@@ -60,6 +61,9 @@ class Users(Resource):
 
         user_id = decode_token_from_header()["user_id"]
         user = db.get_user(user_id)
+        if (data['email'] and user['email'] != data['email']) or (data['password'] and user['password'] !=
+                                                                  data['password']):
+            with_refresh_token = True
         pfp_link = user["pfp_link"]
         pfp_b64 = data.pop("pfp_base64")
 
@@ -81,6 +85,7 @@ class Users(Resource):
         user["settings"] = json.dumps(user["settings"])
         db.edit_user(**user)
         user['token'] = encode_auth_token(user)
-        after_this_request(set_refresh_cookie(user))
+        if with_refresh_token:
+            after_this_request(set_refresh_cookie(user))
         del user['password']
         return user

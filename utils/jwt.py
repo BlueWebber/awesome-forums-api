@@ -19,7 +19,6 @@ def encode_auth_token(user_data, is_refresh=False):
         'email': user_data['email'],
         'permission_level': user_data['permission_level'],
         'pfp_link': user_data['pfp_link'],
-        'reputation': user_data['reputation'],
         'is_refresh': is_refresh
     }
 
