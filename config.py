@@ -32,7 +32,7 @@ class Config:
     PFP_SIZE = (128, 128)
     LENS_MAP = {
         "id": [36, 36],
-        "username": [4, 45],
+        "username": [4, 26],
         "password": [4, 1000],
         "email": [3, 355],
         "title": [4, 150],
@@ -41,6 +41,7 @@ class Config:
     MAX_IMAGE_SIZE = 10485760
     MAX_VID_SIZE = 26214400
     ALLOWED_POST_SORT_CLAUSES = {"newest", "most_replies", "oldest"}
+    ALLOWED_REPLY_SORT_CLAUSES = {"newest", "oldest"}
 
 
 config = Config()

@@ -4,9 +4,6 @@ from MySQLdb.cursors import DictCursor
 from itertools import groupby
 
 
-cursor = extension_db.cursor(cursorclass=DictCursor)
-
-
 def group_reactions(reactions):
     return {key: list(value) for key, value in groupby(reactions, lambda x: x["reaction_name"])}
 
@@ -24,6 +21,11 @@ def get_paginated_posts(page, posts_per_page, sort_column):
 @fetch_result(cursor.fetchone, cursor.nextset)
 def get_number_of_posts():
     cursor.callproc('get_number_of_posts')
+
+
+@fetch_result(cursor.fetchone, cursor.nextset)
+def get_number_of_post_replies(post_id):
+    cursor.callproc('get_number_of_post_replies', (post_id,))
 
 
 @fetch_result(cursor.fetchone, cursor.nextset)

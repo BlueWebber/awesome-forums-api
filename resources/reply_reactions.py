@@ -23,6 +23,8 @@ class ReplyReactions(Resource):
     def post(reply):
         reaction_id = reaction_parser.parse_args()["reaction_type_id"]
         user_id = decode_token_from_header()["user_id"]
+        if user_id == reply["author_id"]:
+            return abort(400, "can't react to own reply")
         if not db.get_reaction(reaction_id):
             return abort(400, "reaction type doesn't exist")
         if db.get_user_reply_reaction(user_id, reply["reply_id"]):
@@ -46,6 +48,8 @@ class ReplyReactions(Resource):
     def put(reply):
         reaction_id = reaction_parser.parse_args()["reaction_type_id"]
         user_id = decode_token_from_header()["user_id"]
+        if user_id == reply["author_id"]:
+            return abort(400, "can't react to own reply")
         if not db.get_reaction(reaction_id):
             return abort(400, "reaction type doesn't exist")
         reaction = db.get_user_reply_reaction(user_id, reply["reply_id"])

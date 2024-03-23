@@ -11,7 +11,7 @@ class Posts(Resource):
         pages_num = config.NUMBER_OF_POST_PAGES
         number_of_pages = ceil(db.get_number_of_posts()["count"] / pages_num)
         if sort_column not in config.ALLOWED_POST_SORT_CLAUSES:
-            return abort(404, "Invalid sorting clause")
+            return abort(400, "Invalid sorting clause")
         posts = db.get_paginated_posts(page_number, pages_num, sort_column)
         if not posts:
             return {"posts": [], "number_of_pages": number_of_pages, "message": "this page doesn't exist"}, 404
