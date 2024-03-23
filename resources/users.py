@@ -78,6 +78,7 @@ class Users(Resource):
         user.update({k: v for k, v in data.items() if v})
         user["settings"] = json.loads(user["settings"])
         user["settings"].update(settings)
+        user["settings"] = json.dumps(user["settings"])
         db.edit_user(**user)
         user['token'] = encode_auth_token(user)
         after_this_request(set_refresh_cookie(user))
