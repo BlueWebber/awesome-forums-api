@@ -37,6 +37,9 @@ class Post(Resource):
 
     @staticmethod
     @validate_and_inject([db.get_post])
-    @authorization_level(perm.mod)
+    @authorization_level(perm.normal)
     def delete(post):
+        user = decode_token_from_header()
+        if user['user_id'] != post['author_id'] and user['permission_level'] < perm.mod:
+            return abort(403)
         return db.delete_post(post["post_id"]), 204

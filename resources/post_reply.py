@@ -25,4 +25,7 @@ class PostReply(Resource):
     @validate_and_inject([db.get_post_reply])
     @authorization_level(perm.mod)
     def delete(reply):
+        user = decode_token_from_header()
+        if user['user_id'] != reply['author_id'] and user['permission_level'] < perm.mod:
+            return abort(403)
         return db.delete_post_reply(reply["reply_id"]), 204
