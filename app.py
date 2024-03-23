@@ -1,7 +1,8 @@
 from flask import Flask
 from extensions import api
 from resources import (posts, post, post_replies, post_reply, auth, users, upload, refresh, post_reactions,
-                       reply_reactions, reactions, search_posts, logout)
+                       reply_reactions, reactions, search_posts, logout, notifications,
+                       unread_notifications)
 
 
 def register_resources(curr_api):
@@ -20,10 +21,12 @@ def register_resources(curr_api):
     curr_api.add_resource(reply_reactions.ReplyReactions, '/reply_reactions/<string:reply_id>')
     curr_api.add_resource(reactions.Reactions, '/reactions')
     curr_api.add_resource(logout.Logout, '/logout')
+    # curr_api.add_resource(notification.Notification, '/notification/<string:notification_id>')
+    curr_api.add_resource(notifications.Notifications, '/notifications/<int:page_number>')
+    curr_api.add_resource(unread_notifications.UnreadNotifications, '/unread_notifications')
 
 
 def register_extensions(app):
-    # cors.init_app(app)
     api.init_app(app)
 
 

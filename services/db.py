@@ -1,6 +1,7 @@
 from itertools import groupby
 from extensions import request_db_connection
 from MySQLdb.cursors import DictCursor
+from config import config
 
 
 def fetch_result(fetch_all, mapper=None):
@@ -25,6 +26,11 @@ def fetch_result(fetch_all, mapper=None):
 cursor = extension_db.cursor(cursorclass=DictCursor)
 
 
+posts_per_page = config.NUMBER_OF_POST_PAGES
+replies_per_page = config.NUMBER_OF_REPLY_PAGES
+notifications_per_page = config.NUMBER_OF_NOTIFICATION_PAGES
+
+
 def group_reactions(reactions):
     if reactions and 'reaction_name' in reactions[0].keys():
         return {key: list(value) for key, value in groupby(reactions, lambda x: x["reaction_name"])}
@@ -37,12 +43,12 @@ def create_post(cursor, author_id, title, body, is_pinned):
 
 
 @fetch_result(True)
-def get_paginated_posts(cursor, page, posts_per_page, sort_column):
+def get_paginated_posts(cursor, page, sort_column):
     cursor.callproc('get_paginated_posts', (page, posts_per_page, sort_column))
 
 
 @fetch_result(True)
-def search_paginated_posts(cursor, search_query, page, posts_per_page, sort_column):
+def search_paginated_posts(cursor, search_query, page, sort_column):
     cursor.callproc('search_paginated_posts', (search_query, page, posts_per_page, sort_column))
 
 
@@ -107,7 +113,7 @@ def get_post_reply(cursor, reply_id):
 
 
 @fetch_result(True)
-def get_paginated_post_replies(cursor, post_id, page, replies_per_page, sort_column):
+def get_paginated_post_replies(cursor, post_id, page, sort_column):
     cursor.callproc('get_paginated_post_replies', (post_id, page, replies_per_page, sort_column))
 
 
@@ -184,3 +190,49 @@ def get_user_post_reaction(cursor, user_id, post_id):
 @fetch_result(False)
 def get_user_reply_reaction(cursor, user_id, post_id):
     cursor.callproc('get_user_reply_reaction', (user_id, post_id))
+
+
+@fetch_result(None)
+def create_post_notification(cursor, user_id, author_id, post_id, notification_body):
+    cursor.callproc('create_post_notification', (user_id, author_id, post_id, notification_body,))
+
+
+@fetch_result(None)
+def create_reply_notification(cursor, user_id, author_id, post_id, reply_id, notification_body):
+    cursor.callproc('create_reply_notification', (user_id, author_id, post_id, reply_id, notification_body,))
+
+
+@fetch_result(False)
+def get_notification(cursor, notification_id):
+    cursor.callproc('get_notification', (notification_id,))
+
+
+@fetch_result(None)
+def edit_notification_is_read(cursor, notification_id, is_read):
+    cursor.callproc('edit_notification_is_read', (notification_id, int(bool(is_read))))
+
+
+@fetch_result(None)
+def delete_notification(cursor, notification_id):
+    cursor.callproc('delete_notification', (notification_id,))
+
+
+@fetch_result(True)
+def get_paginated_user_notifications(cursor, user_id, page):
+    cursor.callproc('get_paginated_user_notifications', (user_id, page, notifications_per_page))
+
+
+@fetch_result(False)
+def get_number_of_user_notifications(cursor, user_id):
+    cursor.callproc('get_number_of_user_notifications', (user_id,))
+
+
+@fetch_result(False)
+def get_number_of_unread_user_notifications(cursor, user_id):
+    cursor.callproc('get_number_of_unread_user_notifications', (user_id,))
+
+
+@fetch_result(None)
+def mark_user_notifications_as_read(cursor, user_id):
+    cursor.callproc('mark_user_notifications_as_read', (user_id,))
+

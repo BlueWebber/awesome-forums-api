@@ -14,12 +14,12 @@ class PostReplies(Resource):
     @staticmethod
     @validate_and_inject([db.get_post])
     def get(post, sort_column="newest", page_number=0):
-        pages_num = config.NUMBER_OF_POST_PAGES
+        pages_num = config.NUMBER_OF_REPLY_PAGES
         number_of_replies = db.get_number_of_post_replies(post["post_id"])
         number_of_pages = ceil(number_of_replies["count"] / pages_num)
         if sort_column not in config.ALLOWED_REPLY_SORT_CLAUSES:
             return abort(400, "Invalid sorting clause")
-        replies = db.get_paginated_post_replies(post['post_id'], page_number, pages_num, sort_column)
+        replies = db.get_paginated_post_replies(post['post_id'], page_number, sort_column)
         if not replies:
             return {"replies": [], "number_of_pages": number_of_pages, "message": "this page doesn't exist"}, 404
         return {"replies": replies, "number_of_pages": number_of_pages}

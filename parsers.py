@@ -68,3 +68,6 @@ patch_user_parser.add_argument('pfp_base64', type=length(0, ((config.MAX_IMAGE_S
 
 reaction_parser = reqparse.RequestParser()
 reaction_parser.add_argument('reaction_type_id', type=length(*lens["id"], help_str="reaction_type_id"), required=True)
+
+notification_is_read_parser = reqparse.RequestParser()
+notification_is_read_parser.add_argument('is_read', type=bool, required=True)

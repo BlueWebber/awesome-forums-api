@@ -10,6 +10,7 @@ def encode_auth_token(user_data, is_refresh=False):
     else:
         exp = datetime.datetime.utcnow() + datetime.timedelta(minutes=config.EXPIRY_TIME_MINS,
                                                               hours=config.EXPIRY_TIME_HOURS)
+        # exp = datetime.datetime.utcnow() + datetime.timedelta(seconds=10)
     payload = {
         'iat': datetime.datetime.utcnow(),
         'exp': exp,
@@ -18,6 +19,7 @@ def encode_auth_token(user_data, is_refresh=False):
         'email': user_data['email'],
         'permission_level': user_data['permission_level'],
         'pfp_link': user_data['pfp_link'],
+        'reputation': user_data['reputation'],
         'is_refresh': is_refresh
     }
 

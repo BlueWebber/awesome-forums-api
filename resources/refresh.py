@@ -29,3 +29,6 @@ class Refresh(Resource):
 
         after_this_request(set_refresh_cookie(user))
         return encode_auth_token(user)
+
+    def post(self):
+        return self.get()
