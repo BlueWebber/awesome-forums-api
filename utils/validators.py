@@ -51,13 +51,13 @@ def validate_and_inject(queries):
     def decorator(func):
         def wrapper(**kwargs):
             if not kwargs:
-                return abort(404)
+                return abort(404, "Invalid arguments")
             result = []
             for query, arg in zip_longest(queries, kwargs.values()):
                 if query:
                     item = query(arg)
                     if not item:
-                        return abort(404)
+                        return abort(404, "arguments don't exist on DB")
                     result.append(item)
                 else:
                     result.append(arg)
