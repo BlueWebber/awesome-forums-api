@@ -19,6 +19,8 @@ def fetch_result(fetch_all, mapper=None):
         return wrapper
     return decorator
 
+cursor = extension_db.cursor(cursorclass=DictCursor)
+
 
 def group_reactions(reactions):
     if reactions and 'reaction_name' in reactions[0].keys():
