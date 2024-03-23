@@ -33,7 +33,7 @@ class Config:
     ANIMATED_IMAGE_FORMAT = 'GIF'
     ALLOWED_IMAGE_FORMATS = {"png", "jpeg", "jpg", "gif"}
     ALLOWED_VIDEO_FORMATS = {"mp4", "webm"}
-    ALLOWED_USER_SETTINGS = {"theme"}
+    ALLOWED_USER_SETTINGS = {"theme", "reply_notifications", "post_notifications"}
     PFP_SIZE = (128, 128)
     LENS_MAP = {
         "id": [36, 36],
