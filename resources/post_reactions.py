@@ -3,7 +3,7 @@ from flask import abort
 from services import db
 from utils.validators import validate_and_inject
 from utils.getters import decode_token_from_header
-from services.auth import authorization_level
+from services.auth import authorization_level, with_refresh
 from permissions import permissions_map as perm
 from parsers import reaction_parser
 
@@ -11,6 +11,7 @@ from parsers import reaction_parser
 class PostReactions(Resource):
     @staticmethod
     @validate_and_inject([db.get_post])
+    @with_refresh
     def get(post):
         reactions = db.get_post_reactions(post["post_id"])
         if not reactions:

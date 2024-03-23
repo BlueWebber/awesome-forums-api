@@ -38,7 +38,12 @@ def decode_auth_token(auth_token):
 
 def set_refresh_cookie(user):
     def cookie_setter(response):
-        response.set_cookie('refresh_token', value=encode_auth_token(user, is_refresh=True),
+        response.set_cookie(config.REFRESH_COOKIE_NAME, value=encode_auth_token(user, is_refresh=True),
                             max_age=config.REFRESH_COOKIE_EXPIRY_SECONDS, samesite="Lax", httponly=True)
         return response
     return cookie_setter
+
+
+def unset_refresh_cookie(response):
+    response.set_cookie(config.REFRESH_COOKIE_NAME, value='', max_age=0)
+    return response

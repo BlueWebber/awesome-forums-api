@@ -2,7 +2,7 @@ from flask_restful import Resource
 from flask import abort
 from services import db
 from utils.validators import validate_and_inject
-from services.auth import authorization_level
+from services.auth import authorization_level, with_refresh
 from utils.getters import decode_token_from_header
 from permissions import permissions_map as perm
 from parsers import reaction_parser
@@ -11,6 +11,7 @@ from parsers import reaction_parser
 class ReplyReactions(Resource):
     @staticmethod
     @validate_and_inject([db.get_post_reply])
+    @with_refresh
     def get(reply):
         reactions = db.get_reply_reactions(reply["reply_id"])
         if not reactions:

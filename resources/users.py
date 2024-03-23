@@ -6,7 +6,7 @@ from utils.pw_hash import hash_pw
 from utils.validators import validate_and_inject
 from utils.getters import decode_token_from_header
 from utils.validators import validate_and_upload_pfp
-from services.auth import authorization_level
+from services.auth import authorization_level, with_refresh
 from permissions import permissions_map as perm
 from utils.jwt import encode_auth_token, set_refresh_cookie
 from config import config
@@ -16,12 +16,15 @@ import json
 class Users(Resource):
     @staticmethod
     @validate_and_inject([db.get_user])
+    @with_refresh
     def get(user):
         del user['password']
         token = decode_token_from_header()
+        user['is_own'] = True
         if not token or token['user_id'] != user['user_id']:
             del user['email']
             del user['settings']
+            del user['is_own']
         else:
             user['settings'] = json.loads(user['settings'])
         return user
@@ -76,6 +79,7 @@ class Users(Resource):
         user["settings"] = json.loads(user["settings"])
         user["settings"].update(settings)
         db.edit_user(**user)
+        user['token'] = encode_auth_token(user)
         after_this_request(set_refresh_cookie(user))
         del user['password']
         return user

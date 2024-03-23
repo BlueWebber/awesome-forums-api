@@ -17,6 +17,7 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     NUMBER_OF_POST_PAGES = 20
     ALLOWED_ORIGINS = 'http://localhost:3000'
+    # ALLOWED_ORIGINS = "http://192.168.1.5:3000"
     ALLOWED_METHODS = "GET, POST, OPTIONS, PUT, DELETE, PATCH"
     ALLOWED_HEADERS = "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With, x-auth-token"
     CORS_HEADERS = 'Content-Type'
@@ -44,6 +45,7 @@ class Config:
     MAX_VID_SIZE = 26214400
     ALLOWED_POST_SORT_CLAUSES = {"newest", "most_replies", "oldest"}
     ALLOWED_REPLY_SORT_CLAUSES = {"newest", "oldest"}
+    REFRESH_COOKIE_NAME = "refresh_token"
 
 
 config = Config()
