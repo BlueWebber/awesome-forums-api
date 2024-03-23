@@ -1,12 +1,13 @@
 from itertools import groupby
-from extensions import extension_db
+from extensions import request_db_connection
 from MySQLdb.cursors import DictCursor
 
 
-def fetch_result(fetch_all, next_set, mapper=None):
+def fetch_result(fetch_all, mapper=None):
     def decorator(func):
         def wrapper(*args, **kwargs):
-            with extension_db.cursor(cursorclass=DictCursor) as cursor:
+            with request_db_connection() as connection:
+                cursor = connection.cursor(cursorclass=DictCursor)
                 func(cursor, *args, **kwargs)
                 if fetch_all:
                     result = cursor.fetchall()
@@ -14,37 +15,38 @@ def fetch_result(fetch_all, next_set, mapper=None):
                     result = cursor.fetchone()
                 if mapper:
                     result = mapper(result)
-                cursor.close()
                 return result
         return wrapper
     return decorator
 
 
 def group_reactions(reactions):
-    return {key: list(value) for key, value in groupby(reactions, lambda x: x["reaction_name"])}
+    if reactions and 'reaction_name' in reactions[0].keys():
+        return {key: list(value) for key, value in groupby(reactions, lambda x: x["reaction_name"])}
+    return reactions
 
 
-@fetch_result(False, True)
+@fetch_result(False)
 def create_post(cursor, author_id, title, body):
     cursor.callproc('create_post', (author_id, title, body))
 
 
-@fetch_result(True, True)
+@fetch_result(True)
 def get_paginated_posts(cursor, page, posts_per_page, sort_column):
     cursor.callproc('get_paginated_posts', (page, posts_per_page, sort_column))
 
 
-@fetch_result(False, True)
+@fetch_result(False)
 def get_number_of_posts(cursor):
     cursor.callproc('get_number_of_posts')
 
 
-@fetch_result(False, True)
+@fetch_result(False)
 def get_number_of_post_replies(cursor, post_id):
     cursor.callproc('get_number_of_post_replies', (post_id,))
 
 
-@fetch_result(False, True)
+@fetch_result(False)
 def get_post(cursor, post_id):
     cursor.callproc('get_post', (post_id,))
 
@@ -57,42 +59,42 @@ def delete_post(cursor, post_id):
     cursor.callproc('delete_post', (post_id,))
 
 
-@fetch_result(False, True)
+@fetch_result(False)
 def get_user(cursor, user_id):
     cursor.callproc('get_user', (user_id,))
 
 
-@fetch_result(False, True)
+@fetch_result(False)
 def edit_user(cursor, user_id, username, email, password, settings, permission_level, pfp_link, **kwargs):
     cursor.callproc('edit_user', (user_id, username, email, password, settings, permission_level, pfp_link))
 
 
-@fetch_result(False, True)
+@fetch_result(False)
 def get_user_by_email(cursor, email):
     cursor.callproc('get_user_by_email', (email,))
 
 
-@fetch_result(False, True)
+@fetch_result(False)
 def get_user_by_username(cursor, username):
     cursor.callproc('get_user_by_username', (username,))
 
 
-@fetch_result(False, True)
+@fetch_result(False)
 def create_user(cursor, username, email, hashed_pw, pfp_link):
     cursor.callproc('create_user', (username, email, hashed_pw, pfp_link))
 
 
-@fetch_result(False, True)
+@fetch_result(False)
 def get_post_reply(cursor, reply_id):
     cursor.callproc('get_post_reply', (reply_id,))
 
 
-@fetch_result(True, True)
+@fetch_result(True)
 def get_paginated_post_replies(cursor, post_id, page, replies_per_page, sort_column):
     cursor.callproc('get_paginated_post_replies', (post_id, page, replies_per_page, sort_column))
 
 
-@fetch_result(False, True)
+@fetch_result(False)
 def create_post_reply(cursor, post_id, author_id, body):
     cursor.callproc('create_post_reply', (post_id, author_id, body))
 
@@ -105,12 +107,12 @@ def delete_post_reply(cursor, reply_id):
     cursor.callproc('delete_post_reply', (reply_id,))
 
 
-@fetch_result(False, True)
+@fetch_result(False)
 def create_post_reaction(cursor, reaction_id, post_id, creator_id):
     cursor.callproc('create_post_reaction', (reaction_id, post_id, creator_id))
 
 
-@fetch_result(False, True)
+@fetch_result(False)
 def create_reply_reaction(cursor, reaction_id, reply_id, creator_id):
     cursor.callproc('create_reply_reaction', (reaction_id, reply_id, creator_id))
 
@@ -123,41 +125,41 @@ def delete_post_reaction(cursor, reaction_id):
     cursor.callproc('delete_post_reaction', (reaction_id,))
 
 
-@fetch_result(lambda: True, True, mapper=lambda result: group_reactions(result))
+@fetch_result(True, mapper=lambda result: group_reactions(result))
 def get_reply_reactions(cursor, reply_id):
     cursor.callproc('get_reply_reactions', (reply_id,))
 
 
-@fetch_result(True, True, mapper=lambda result: group_reactions(result))
+@fetch_result(True, mapper=lambda result: group_reactions(result))
 def get_post_reactions(cursor, post_id):
     cursor.callproc('get_post_reactions', (post_id,))
 
 
-@fetch_result(True, True)
+@fetch_result(True)
 def get_reactions(cursor):
     cursor.callproc('get_reactions', ())
 
 
-@fetch_result(False, True)
+@fetch_result(False)
 def get_reaction(cursor, reaction_id):
     cursor.callproc('get_reaction', (reaction_id,))
 
 
-@fetch_result(False, True)
+@fetch_result(False)
 def get_post_reaction(cursor, reaction_id):
     cursor.callproc('get_post_reaction', (reaction_id,))
 
 
-@fetch_result(False, True)
+@fetch_result(False)
 def get_reply_reaction(cursor, reaction_id):
     cursor.callproc('get_reply_reaction', (reaction_id,))
 
 
-@fetch_result(False, True)
+@fetch_result(False)
 def get_user_post_reaction(cursor, user_id, post_id):
     cursor.callproc('get_user_post_reaction', (user_id, post_id))
 
 
-@fetch_result(False, True)
+@fetch_result(False)
 def get_user_reply_reaction(cursor, user_id, post_id):
     cursor.callproc('get_user_reply_reaction', (user_id, post_id))
