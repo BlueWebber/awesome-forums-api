@@ -1,7 +1,6 @@
 from flask import Flask
 from extensions import api
-from resources import posts, post, post_replies, post_reply, auth, users, upload
-# from resources import test
+from resources import posts, post, post_replies, post_reply, auth, users, upload, refresh
 
 
 def register_resources(curr_api):
@@ -14,7 +13,7 @@ def register_resources(curr_api):
     curr_api.add_resource(auth.Auth, '/auth')
     curr_api.add_resource(users.Users, '/users', '/users/<string:user_id>')
     curr_api.add_resource(upload.Upload, '/upload')
-    # curr_api.add_resource(test.Test, '/test/<string:post_id>')
+    curr_api.add_resource(refresh.Refresh, '/refresh')
 
 
 def register_extensions(app):
