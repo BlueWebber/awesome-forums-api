@@ -18,8 +18,10 @@ class Post(Resource):
     @authorization_level(perm.normal)
     def post():
         data = new_post_parser.parse_args()
-        user_id = decode_token_from_header()['user_id']
-        return db.create_post(user_id, **data), 201
+        user = decode_token_from_header()
+        if data["is_pinned"] and user["permission_level"] < perm.mod:
+            return abort(403, "can't pin a post with your current permission level")
+        return db.create_post(user["user_id"], **data), 201
 
     @staticmethod
     @validate_and_inject([db.get_post])
@@ -27,10 +29,10 @@ class Post(Resource):
     def patch(post):
         data = patch_post_parser.parse_args()
         user = decode_token_from_header()
-        if user['user_id'] != post['author_id'] and user['permission_level'] < perm.mod:
+        if (user['user_id'] != post['author_id'] or data["is_pinned"]) and user['permission_level'] < perm.mod:
             return abort(403)
         post.update(data)
-        db.edit_post(post['post_id'], post['title'], post['body'])
+        db.edit_post(**post)
         return post
 
     @staticmethod

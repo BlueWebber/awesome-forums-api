@@ -29,10 +29,12 @@ def length(min_len, max_len, help_str, with_strip=False, validator=None, validat
 new_post_parser = reqparse.RequestParser()
 new_post_parser.add_argument('title', type=length(*lens["title"], help_str="title", with_strip=True), required=True)
 new_post_parser.add_argument('body', type=length(*lens["body"], help_str="body", with_strip=True), required=True)
+new_post_parser.add_argument('is_pinned', type=bool)
 
 patch_post_parser = reqparse.RequestParser()
 patch_post_parser.add_argument('title', type=length(*lens["title"], help_str="title", with_strip=True))
 patch_post_parser.add_argument('body', type=length(*lens["body"], help_str="body", with_strip=True))
+patch_post_parser.add_argument('is_pinned', type=bool)
 
 login_parser = reqparse.RequestParser()
 login_parser.add_argument('email', type=str, required=True)

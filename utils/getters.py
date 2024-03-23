@@ -8,4 +8,6 @@ def decode_token_from_header():
         token = request.headers[config.AUTH_TOKEN_NAME]
     except KeyError:
         return
+    if not token:
+        return
     return decode_auth_token(token)

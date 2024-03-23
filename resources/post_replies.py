@@ -29,5 +29,5 @@ class PostReplies(Resource):
     @authorization_level(perm.normal)
     def post(post):
         body = new_post_reply_parser.parse_args()['body']
-        user_id = decode_token_from_header()['id']
+        user_id = decode_token_from_header()['user_id']
         return db.create_post_reply(post['post_id'], user_id, body), 201

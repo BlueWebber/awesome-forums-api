@@ -32,8 +32,8 @@ def group_reactions(reactions):
 
 
 @fetch_result(False)
-def create_post(cursor, author_id, title, body):
-    cursor.callproc('create_post', (author_id, title, body))
+def create_post(cursor, author_id, title, body, is_pinned):
+    cursor.callproc('create_post', (author_id, title, body, int(bool(is_pinned))))
 
 
 @fetch_result(True)
@@ -67,8 +67,8 @@ def get_post(cursor, post_id):
 
 
 @fetch_result(None)
-def edit_post(cursor, post_id, title, body):
-    cursor.callproc('edit_post', (post_id, title, body))
+def edit_post(cursor, post_id, title, body, is_pinned, **kwargs):
+    cursor.callproc('edit_post', (post_id, title, body, int(is_pinned)))
 
 
 @fetch_result(None)
