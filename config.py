@@ -1,11 +1,16 @@
 from dotenv import load_dotenv
 from os import environ
-load_dotenv()
+from utils.serializer import DatetimeEncoder
 
 
 class Config:
-    SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{environ.get('db_username')}:{environ.get('db_pass')}@" \
-                              f"{environ.get('db_host')}/{environ.get('db_name')}"
+    load_dotenv()
+    RESTFUL_JSON = {'cls': DatetimeEncoder}
+    MYSQL_HOST = environ.get('db_host')
+    MYSQL_USER = environ.get('db_username')
+    MYSQL_PASSWORD = environ.get('db_pass')
+    MYSQL_port = environ.get('db_port')
+    MYSQL_DB = environ.get('db_name')
     DEBUG = True
     DEVELOPMENT = True
     SECRET_KEY = environ.get('SECRET_KEY')
@@ -18,6 +23,19 @@ class Config:
     EXPIRY_TIME_MINS = 0
     EXPIRY_TIME_HOURS = 72
     AUTH_TOKEN_NAME = 'x-auth-token'
+    IMAGE_FORMAT = 'JPEG'
+    PFP_IMAGE_FORMAT = 'PNG'
+    VIDEO_FORMAT = 'MP4'
+    PFP_SIZE = (128, 128)
+    MAX_LENS_MAP = {
+        "username": 45,
+        "password": 1000,
+        "email": 355,
+        "title": 150,
+        "body": 15000,
+    }
+    MAX_IMAGE_SIZE = 10485760
+    MAX_VID_SIZE = 26214400
 
 
 config = Config()

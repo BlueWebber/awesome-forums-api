@@ -38,3 +38,8 @@ class Image:
 
     def clean_up(self):
         self.image.close()
+
+
+class Video:
+    def __init__(self, b64string, video_format=config.VIDEO_FORMAT):
+        pass

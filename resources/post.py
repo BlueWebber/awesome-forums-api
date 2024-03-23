@@ -30,7 +30,7 @@ class Post(Resource):
         if user['user_id'] != post['author_id'] and user['permission_level'] < perm.mod:
             return abort(403)
         post.update(data)
-        db.patch_post(post["post_id"], **data)
+        db.edit_post(post['post_id'], post['title'], post['body'])
         return post
 
     @staticmethod

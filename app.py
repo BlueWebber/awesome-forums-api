@@ -1,10 +1,11 @@
 from flask import Flask
-from extensions import extension_db, api
+from extensions import api
 from resources import posts, post, post_replies, post_reply, auth, users
+# from resources import test
 
 
 def register_resources(curr_api):
-    curr_api.add_resource(posts.Posts, '/posts', '/posts/<int:page_number>')
+    curr_api.add_resource(posts.Posts, '/posts/<string:sort_column>/<int:page_number>/')
     curr_api.add_resource(post.Post, '/post', '/post/<string:post_id>')
     curr_api.add_resource(post_replies.PostReplies, '/post_replies/<string:post_id>',
                           '/post_replies/<string:post_id>/<int:page_number>'
@@ -12,10 +13,10 @@ def register_resources(curr_api):
     curr_api.add_resource(post_reply.PostReply, '/post_reply/<string:reply_id>')
     curr_api.add_resource(auth.Auth, '/auth')
     curr_api.add_resource(users.Users, '/users', '/users/<string:user_id>')
+    # curr_api.add_resource(test.Test, '/test/<string:post_id>')
 
 
 def register_extensions(app):
-    extension_db.init_app(app)
     api.init_app(app)
 
 
