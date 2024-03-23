@@ -1,4 +1,4 @@
-from utils.serializer import convert_b64_to_bytes
+from utils.serializers import convert_b64_to_bytes
 from PIL import Image as Img
 from services.imgur import upload_from_bytes
 from config import config

@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 from os import environ
-from utils.serializer import DatetimeEncoder
+from utils.serializers import DatetimeEncoder
 
 
 class Config:

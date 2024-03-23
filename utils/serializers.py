@@ -1,6 +1,5 @@
 import json
 import base64
-from itertools import groupby
 
 
 class DatetimeEncoder(json.JSONEncoder):
