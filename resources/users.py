@@ -8,6 +8,7 @@ from utils.getters import decode_token_from_header
 from utils.validators import validate_and_upload_pfp
 from services.auth import authorization_level
 from permissions import permissions_map as perm
+from config import config
 
 
 class Users(Resource):
@@ -46,6 +47,10 @@ class Users(Resource):
     @authorization_level(perm.normal)
     def patch():
         data = patch_user_parser.parse_args()
+        settings = data.pop("settings")
+        for key in settings.keys():
+            if key not in config.ALLOWED_USER_SETTINGS:
+                return abort(400, "invalid settings value")
         user_id = decode_token_from_header()["user_id"]
         user = db.get_user(user_id)
         pfp_link = user["pfp_link"]
@@ -56,6 +61,7 @@ class Users(Resource):
                 return abort(400, "Invalid pfp (pfp_base64)")
         data["pfp_link"] = pfp_link
         user.update({k: v for k, v in data.items() if v})
+        user["settings"].update(settings)
         result = db.edit_user(**user)
         del result['password']
         return result

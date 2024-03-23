@@ -25,7 +25,10 @@ class Config:
     AUTH_TOKEN_NAME = 'x-auth-token'
     IMAGE_FORMAT = 'JPEG'
     PFP_IMAGE_FORMAT = 'PNG'
-    VIDEO_FORMAT = 'MP4'
+    ANIMATED_IMAGE_FORMAT = 'GIF'
+    ALLOWED_IMAGE_FORMATS = {"png", "jpeg", "jpg", "gif", "bmp", "dib", "eps", "ico", "im", "ics", "msp", "pcx"}
+    ALLOWED_VIDEO_FORMATS = {"mp4", "webm"}
+    ALLOWED_USER_SETTINGS = {"theme"}
     PFP_SIZE = (128, 128)
     MAX_LENS_MAP = {
         "username": 45,

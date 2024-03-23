@@ -1,7 +1,7 @@
 import re
 from flask import abort
 from itertools import zip_longest
-from utils.media import Image
+from services.media import ByteImage, ByteVideo
 from config import config
 
 email_regex = re.compile(r"[^@]+@[^@]+\.[^@]+")
@@ -17,12 +17,34 @@ def validate_username(username):
 
 
 def validate_and_upload_pfp(base_64_str):
-    img = Image(base_64_str, config.PFP_IMAGE_FORMAT)
-    if 'image' not in dir(img) or not round(img.aspect_ratio, 0) == 1:
+    try:
+        img = ByteImage(base_64_str, config.PFP_IMAGE_FORMAT)
+        if not round(img.aspect_ratio, 0) == 1:
+            print("wrong ratio")
+            return False
+        if img.size != config.PFP_SIZE:
+            img.resize()
+        result = img.upload()
+    except (AssertionError, RuntimeError) as ex:
+        print(ex)
         return False
-    if img.image.size != config.PFP_SIZE:
-        img.resize()
-    return img.upload()
+    else:
+        return result
+
+
+def validate_and_upload_media(media_type, base_64_str):
+    try:
+        result = None
+        if media_type == "image":
+            img = ByteImage(base_64_str, config.PFP_IMAGE_FORMAT)
+            result = img.upload()
+        elif media_type == "video":
+            vid = ByteVideo(base_64_str)
+            result = vid.upload()
+    except (AssertionError, RuntimeError):
+        return False
+    else:
+        return result
 
 
 def validate_and_inject(queries):

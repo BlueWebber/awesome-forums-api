@@ -10,6 +10,6 @@ class DatetimeEncoder(json.JSONEncoder):
             return str(obj)
 
 
-def convert_b64_to_image(b64_string):
+def convert_b64_to_bytes(b64_string):
     return base64.decodebytes(b64_string.encode())
 
