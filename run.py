@@ -15,5 +15,10 @@ def apply_headers(response: flask.Response):
     return response
 
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return {"message": "resource doesn't exist"}, 404
+
+
 if __name__ == "__main__":
     app.run()

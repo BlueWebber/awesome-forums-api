@@ -30,12 +30,13 @@ class Config:
     ALLOWED_VIDEO_FORMATS = {"mp4", "webm"}
     ALLOWED_USER_SETTINGS = {"theme"}
     PFP_SIZE = (128, 128)
-    MAX_LENS_MAP = {
-        "username": 45,
-        "password": 1000,
-        "email": 355,
-        "title": 150,
-        "body": 15000,
+    LENS_MAP = {
+        "id": [36, 36],
+        "username": [4, 45],
+        "password": [4, 1000],
+        "email": [3, 355],
+        "title": [4, 150],
+        "body": [10, 15000],
     }
     MAX_IMAGE_SIZE = 10485760
     MAX_VID_SIZE = 26214400

@@ -1,9 +1,14 @@
 from utils.getters import fetch_result
 from extensions import extension_db
 from MySQLdb.cursors import DictCursor
+from itertools import groupby
 
 
 cursor = extension_db.cursor(cursorclass=DictCursor)
+
+
+def group_reactions(reactions):
+    return {key: list(value) for key, value in groupby(reactions, lambda x: x["reaction_name"])}
 
 
 @fetch_result(cursor.fetchone, cursor.nextset)
@@ -82,12 +87,12 @@ def delete_post_reply(reply_id):
     cursor.callproc('delete_post_reply', (reply_id,))
 
 
-@fetch_result(cursor.fetchall, cursor.nextset)
+@fetch_result(cursor.fetchone, cursor.nextset)
 def create_post_reaction(reaction_id, post_id, creator_id):
     cursor.callproc('create_post_reaction', (reaction_id, post_id, creator_id))
 
 
-@fetch_result(cursor.fetchall, cursor.nextset)
+@fetch_result(cursor.fetchone, cursor.nextset)
 def create_reply_reaction(reaction_id, reply_id, creator_id):
     cursor.callproc('create_reply_reaction', (reaction_id, reply_id, creator_id))
 
@@ -97,14 +102,44 @@ def delete_reply_reaction(reaction_id):
 
 
 def delete_post_reaction(reaction_id):
-    cursor.callproc('delete_post_reactions', (reaction_id,))
+    cursor.callproc('delete_post_reaction', (reaction_id,))
 
 
-@fetch_result(cursor.fetchall, cursor.nextset)
+@fetch_result(lambda: group_reactions(cursor.fetchall()), cursor.nextset)
 def get_reply_reactions(reply_id):
     cursor.callproc('get_reply_reactions', (reply_id,))
 
 
-@fetch_result(cursor.fetchall, cursor.nextset)
+@fetch_result(lambda: group_reactions(cursor.fetchall()), cursor.nextset)
 def get_post_reactions(post_id):
     cursor.callproc('get_post_reactions', (post_id,))
+
+
+@fetch_result(cursor.fetchall, cursor.nextset)
+def get_reactions():
+    cursor.callproc('get_reactions', ())
+
+
+@fetch_result(cursor.fetchone, cursor.nextset)
+def get_reaction(reaction_id):
+    cursor.callproc('get_reaction', (reaction_id,))
+
+
+@fetch_result(cursor.fetchone, cursor.nextset)
+def get_post_reaction(reaction_id):
+    cursor.callproc('get_post_reaction', (reaction_id,))
+
+
+@fetch_result(cursor.fetchone, cursor.nextset)
+def get_reply_reaction(reaction_id):
+    cursor.callproc('get_reply_reaction', (reaction_id,))
+
+
+@fetch_result(cursor.fetchone, cursor.nextset)
+def get_user_post_reaction(user_id, post_id):
+    cursor.callproc('get_user_post_reaction', (user_id, post_id))
+
+
+@fetch_result(cursor.fetchone, cursor.nextset)
+def get_user_reply_reaction(user_id, post_id):
+    cursor.callproc('get_user_reply_reaction', (user_id, post_id))
