@@ -15,7 +15,11 @@ class PostReactions(Resource):
         reactions = db.get_post_reactions(post["post_id"])
         if not reactions:
             return {}, 204
-        return reactions
+        user = decode_token_from_header()
+        user_reaction = None
+        if user:
+            user_reaction = db.get_user_post_reaction(user["user_id"], post["post_id"])
+        return {"reactions": reactions, "user_reaction": user_reaction}
 
     @staticmethod
     @validate_and_inject([db.get_post])
