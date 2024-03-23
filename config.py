@@ -16,12 +16,14 @@ class Config:
     SECRET_KEY = environ.get('SECRET_KEY')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     NUMBER_OF_POST_PAGES = 20
-    ALLOWED_ORIGINS = '*'
+    ALLOWED_ORIGINS = 'http://127.0.0.1:3000'
     ALLOWED_METHODS = "GET, POST, OPTIONS, PUT, DELETE, PATCH"
     ALLOWED_HEADERS = "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With, x-auth-token"
+    CORS_HEADERS = 'Content-Type'
     EXPOSED_HEADERS = "x-auth-token"
-    EXPIRY_TIME_MINS = 0
-    EXPIRY_TIME_HOURS = 72
+    EXPIRY_TIME_MINS = 15
+    EXPIRY_TIME_HOURS = 0
+    REFRESH_COOKIE_EXPIRY_SECONDS = 86400 * 90
     AUTH_TOKEN_NAME = 'x-auth-token'
     IMAGE_FORMAT = 'JPEG'
     PFP_IMAGE_FORMAT = 'PNG'

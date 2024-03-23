@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from flask import abort
+from flask import abort, after_this_request
 from services import db
 from parsers import register_parser, patch_user_parser
 from utils.pw_hash import hash_pw
@@ -8,7 +8,7 @@ from utils.getters import decode_token_from_header
 from utils.validators import validate_and_upload_pfp
 from services.auth import authorization_level
 from permissions import permissions_map as perm
-from utils.jwt import encode_auth_token
+from utils.jwt import encode_auth_token, set_refresh_cookie
 from config import config
 import json
 
@@ -41,6 +41,7 @@ class Users(Resource):
                 return abort(400, "Invalid pfp (pfp_base64)")
         result = db.create_user(data['username'], data['email'], password, pfp_link)
         result['token'] = encode_auth_token(result)
+        after_this_request(set_refresh_cookie(result))
         del result['password']
         return result, 201
 
@@ -75,5 +76,6 @@ class Users(Resource):
         user["settings"] = json.loads(user["settings"])
         user["settings"].update(settings)
         db.edit_user(**user)
+        after_this_request(set_refresh_cookie(user))
         del user['password']
         return user

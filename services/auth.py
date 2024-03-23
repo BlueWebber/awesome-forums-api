@@ -12,6 +12,7 @@ def authorization_level(level):
                 return abort(400, 'Access denied, no token provided')
 
             decoded = jwt.decode_auth_token(token)
+
             if decoded:
                 if decoded['permission_level'] >= level:
                     return func(*args, **kwargs)

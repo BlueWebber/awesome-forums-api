@@ -22,6 +22,7 @@ def register_resources(curr_api):
 
 
 def register_extensions(app):
+    # cors.init_app(app)
     api.init_app(app)
 
 
@@ -42,6 +43,7 @@ def register_response_wrappers(app, config):
         response.headers["Access-Control-Allow-Methods"] = config.ALLOWED_METHODS
         response.headers["Access-Control-Allow-Headers"] = config.ALLOWED_HEADERS
         response.headers["Access-Control-Expose-Headers"] = config.EXPOSED_HEADERS
+        response.headers["Access-Control-Allow-Credentials"] = 'true'
         response.headers["Content-Type"] = "application/json"
         return response
 
